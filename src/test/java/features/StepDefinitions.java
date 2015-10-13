@@ -9,6 +9,7 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
 import cucumber.api.java.en.Then;
 
 import kafka.consumer.ConsumerIterator;
@@ -24,10 +25,17 @@ import kafka.consumer.ConsumerIterator;
 import kafka.message.MessageAndMetadata;
 
 public class StepDefinitions {
-  @Given("a producer sends a message to \"(.+)\"")
+  private String node;
+
+  @Given("kafka cluster has node \"(.+)\"")
+  public void useNode(String address) {
+    node = address;
+  }
+
+  @When("a producer sends a message to \"(.+)\"")
   public void produceMessage(final String topic) throws IOException {
     Properties properties = new Properties();
-    properties.setProperty("metadata.broker.list", "192.168.99.100:9092"); // docker-compose ip default
+    properties.setProperty("metadata.broker.list", node);
     ProducerConfig producerConfig = new ProducerConfig(properties);
     Producer<Integer, byte[]> producer = new Producer<>(producerConfig);
     String message = "FizzBuzz";
@@ -40,7 +48,7 @@ public class StepDefinitions {
   @Then("a consumer receives a message from \"(.+)\"")
   public void consumeMessage(final String topic) throws Exception {
     Properties properties = new Properties();
-    properties.setProperty("metadata.broker.list", "192.168.99.100:9092"); // docker-compose ip default
+    properties.setProperty("metadata.broker.list", node);
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);
     Map<String, Integer> topicCountMap = new HashMap<>();
     topicCountMap.put(topic, 1);
