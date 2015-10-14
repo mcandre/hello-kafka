@@ -36,7 +36,7 @@ public class StepDefinitions {
     properties.setProperty("metadata.broker.list", kafkaNodeList);
     properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
     properties.setProperty("producer.type", "sync");
-    properties.setProperty("request.required.acks", "0");
+    properties.setProperty("request.required.acks", "1");
     // ... ?
 
     ProducerConfig producerConfig = new ProducerConfig(properties);
@@ -53,10 +53,9 @@ public class StepDefinitions {
   @Then("^a consumer receives a message from \"([^\"]*)\" in group \"([^\"]*)\"$")
   public void a_consumer_receives_a_message_from_in_group(String topic, String group) {
     Properties properties = new Properties();
-//    properties.setProperty("metadata.broker.list", kafkaNodeList);
     properties.setProperty("zookeeper.connect", zookeeperNodeList);
     properties.setProperty("group.id", group);
-    properties.setProperty("consumer.timeout.ms", "3"); // ms
+    properties.setProperty("consumer.timeout.ms", "3000"); // ms
     // ... ?
 
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);
@@ -64,17 +63,11 @@ public class StepDefinitions {
     topicCountMap.put(topic, 1);
     ConsumerConnector consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);
     Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreamsMap = consumerConnector.createMessageStreams(topicCountMap);
-    ConsumerIterator<byte[], byte[]> messageIterator = null;
-    for (final Map.Entry<String, List<KafkaStream<byte[], byte[]>>> consumerStreamEntry: consumerStreamsMap.entrySet()) {
-      String t = consumerStreamEntry.getKey();
+    List<KafkaStream<byte[], byte[]>> consumerStreams = consumerStreamsMap.get(topic);
+    KafkaStream<byte[], byte[]> consumerStream = consumerStreams.get(0);
+    ConsumerIterator<byte[], byte[]> messageIterator = consumerStream.iterator();
 
-      if (t.equals(topic)) {
-        List<KafkaStream<byte[], byte[]>> consumerStreams = consumerStreamEntry.getValue();
-        KafkaStream<byte[], byte[]> consumerStream = consumerStreams.get(0);
-
-        messageIterator = consumerStream.iterator();
-      }
-    }
+    Assert.assertTrue(messageIterator.hasNext());
 
     MessageAndMetadata<byte[], byte[]> messageAndMetadata = messageIterator.next();
     byte[] messageBytes = messageAndMetadata.message();
