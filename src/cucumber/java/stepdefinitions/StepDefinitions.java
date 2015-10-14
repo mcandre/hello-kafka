@@ -1,3 +1,5 @@
+package stepdefinitions;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -9,15 +11,14 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import cucumber.api.java.en.Then;
 
-import kafka.consumer.ConsumerIterator;
-
 import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.consumer.KafkaStream;
+import kafka.producer.KeyedMessage;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
+import kafka.javaapi.consumer.ConsumerConnector;
+import kafka.consumer.KafkaStream;
+import kafka.consumer.ConsumerIterator;
 import kafka.message.MessageAndMetadata;
 
 public class StepDefinitions {
@@ -25,13 +26,13 @@ public class StepDefinitions {
   private String zookeeperNodeList;
 
   @Given("^kafka cluster has kafka nodes \"([^\"]*)\" and zookeeper nodes \"([^\"]*)\"$")
-  public void kafka_cluster_has_node(String kafkaNodeList, String zookeeperNodeList) {
+  public void kafkaClusterHasNodesAndZookeeperNodes(String kafkaNodeList, String zookeeperNodeList) {
     this.kafkaNodeList = kafkaNodeList;
     this.zookeeperNodeList = zookeeperNodeList;
   }
 
   @When("^a producer sends a message to \"([^\"]*)\"$")
-  public void a_producer_sends_a_message_to(String topic) {
+  public void aProducerSendsAMessageTo(String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", kafkaNodeList);
     properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
@@ -51,10 +52,13 @@ public class StepDefinitions {
   }
 
   @Then("^a consumer receives a message from \"([^\"]*)\" in group \"([^\"]*)\"$")
-  public void a_consumer_receives_a_message_from_in_group(String topic, String group) {
+  public void aConsumerReceivesAMessageFromInGroup(String topic, String group) {
     Properties properties = new Properties();
     properties.setProperty("zookeeper.connect", zookeeperNodeList);
     properties.setProperty("group.id", group);
+//    properties.setProperty("zookeeper.sync.time.ms", "200"); // ms
+//    properties.setProperty("auto.commit.interval.ms", "1000"); // ms
+    properties.setProperty("auto.offset.reset", "smallest");
     properties.setProperty("consumer.timeout.ms", "3000"); // ms
     // ... ?
 
