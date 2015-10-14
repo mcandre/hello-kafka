@@ -38,7 +38,6 @@ public class StepDefinitions {
     properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
     properties.setProperty("producer.type", "sync");
     properties.setProperty("request.required.acks", "1");
-    // ... ?
 
     ProducerConfig producerConfig = new ProducerConfig(properties);
     Producer<byte[], byte[]> producer = new Producer<>(producerConfig);
@@ -56,11 +55,8 @@ public class StepDefinitions {
     Properties properties = new Properties();
     properties.setProperty("zookeeper.connect", zookeeperNodeList);
     properties.setProperty("group.id", group);
-//    properties.setProperty("zookeeper.sync.time.ms", "200"); // ms
-//    properties.setProperty("auto.commit.interval.ms", "1000"); // ms
     properties.setProperty("auto.offset.reset", "smallest");
     properties.setProperty("consumer.timeout.ms", "3000"); // ms
-    // ... ?
 
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);
     Map<String, Integer> topicCountMap = new HashMap<>();
