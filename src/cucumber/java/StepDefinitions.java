@@ -32,6 +32,8 @@ public class StepDefinitions {
   public void a_producer_sends_a_message_to(final String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", node);
+    // ... ?
+
     ProducerConfig producerConfig = new ProducerConfig(properties);
     Producer<Integer, byte[]> producer = new Producer<>(producerConfig);
     String message = "FizzBuzz";
@@ -45,6 +47,8 @@ public class StepDefinitions {
   public void a_consumer_receives_a_message_from(final String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", node);
+    // ... ?
+
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);
     Map<String, Integer> topicCountMap = new HashMap<>();
     topicCountMap.put(topic, 1);
