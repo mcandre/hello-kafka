@@ -22,5 +22,4 @@ dependencies {
   testCompile 'junit:junit:4.12'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.12'
   testCompile 'info.cukes:cucumber-java:1.2.4'
-//  testCompile 'info.cukes:cucumber-junit:1.2.4'
 }
