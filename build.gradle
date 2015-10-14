@@ -8,7 +8,6 @@ apply plugin: 'com.github.samueltbrown.cucumber'
 
 repositories {
   mavenCentral()
-  // Spredfast artifact host here
   mavenLocal()
 }
 
