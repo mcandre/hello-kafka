@@ -4,7 +4,19 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'checkstyle'
 apply plugin: 'com.github.samueltbrown.cucumber'
+
+sourceCompatibility = '1.8'
+
+compileJava {
+  options.compilerArgs << '-Xlint:all'
+}
+
+checkstyle {
+  configFile = "${rootProject.projectDir}/config/checkstyle/checkstyle.xml" as File
+  configProperties = [configDir: "${rootProject.projectDir}/config"]
+}
 
 repositories {
   mavenCentral()

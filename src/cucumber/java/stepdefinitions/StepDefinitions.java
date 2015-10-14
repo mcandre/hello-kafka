@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
