@@ -21,32 +21,42 @@ import kafka.consumer.ConsumerConfig;
 import kafka.message.MessageAndMetadata;
 
 public class StepDefinitions {
-  private String node;
+  private String kafkaNodeList;
+  private String zookeeperNodeList;
 
-  @Given("^kafka cluster has node \"([^\"]*)\"$")
-  public void kafka_cluster_has_node(String address) {
-    node = address;
+  @Given("^kafka cluster has kafka nodes \"([^\"]*)\" and zookeeper nodes \"([^\"]*)\"$")
+  public void kafka_cluster_has_node(String kafkaNodeList, String zookeeperNodeList) {
+    this.kafkaNodeList = kafkaNodeList;
+    this.zookeeperNodeList = zookeeperNodeList;
   }
 
   @When("^a producer sends a message to \"([^\"]*)\"$")
-  public void a_producer_sends_a_message_to(final String topic) {
+  public void a_producer_sends_a_message_to(String topic) {
     Properties properties = new Properties();
-    properties.setProperty("metadata.broker.list", node);
+    properties.setProperty("metadata.broker.list", kafkaNodeList);
+    properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
+    properties.setProperty("producer.type", "sync");
+    properties.setProperty("request.required.acks", "0");
     // ... ?
 
     ProducerConfig producerConfig = new ProducerConfig(properties);
-    Producer<Integer, byte[]> producer = new Producer<>(producerConfig);
+    Producer<byte[], byte[]> producer = new Producer<>(producerConfig);
+
     String message = "FizzBuzz";
     byte[] messageBytes = message.getBytes();
-    KeyedMessage<Integer, byte[]> keyedMessage = new KeyedMessage<>(topic, messageBytes);
+
+    KeyedMessage<byte[], byte[]> keyedMessage = new KeyedMessage<>(topic, messageBytes);
 
     producer.send(keyedMessage);
   }
 
-  @Then("^a consumer receives a message from \"([^\"]*)\"$")
-  public void a_consumer_receives_a_message_from(final String topic) {
+  @Then("^a consumer receives a message from \"([^\"]*)\" in group \"([^\"]*)\"$")
+  public void a_consumer_receives_a_message_from_in_group(String topic, String group) {
     Properties properties = new Properties();
-    properties.setProperty("metadata.broker.list", node);
+//    properties.setProperty("metadata.broker.list", kafkaNodeList);
+    properties.setProperty("zookeeper.connect", zookeeperNodeList);
+    properties.setProperty("group.id", group);
+    properties.setProperty("consumer.timeout.ms", "3"); // ms
     // ... ?
 
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);
@@ -55,7 +65,6 @@ public class StepDefinitions {
     ConsumerConnector consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);
     Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreamsMap = consumerConnector.createMessageStreams(topicCountMap);
     ConsumerIterator<byte[], byte[]> messageIterator = null;
-
     for (final Map.Entry<String, List<KafkaStream<byte[], byte[]>>> consumerStreamEntry: consumerStreamsMap.entrySet()) {
       String t = consumerStreamEntry.getKey();
 
