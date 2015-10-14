@@ -1,10 +1,7 @@
-package features;
-
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
-import java.io.IOException;
 
 import junit.framework.Assert;
 
@@ -21,19 +18,18 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.consumer.KafkaStream;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
 import kafka.message.MessageAndMetadata;
 
 public class StepDefinitions {
   private String node;
 
-  @Given("kafka cluster has node \"(.+)\"")
-  public void useNode(String address) {
+  @Given("^kafka cluster has node \"([^\"]*)\"$")
+  public void kafka_cluster_has_node(String address) {
     node = address;
   }
 
-  @When("a producer sends a message to \"(.+)\"")
-  public void produceMessage(final String topic) throws IOException {
+  @When("^a producer sends a message to \"([^\"]*)\"$")
+  public void a_producer_sends_a_message_to(final String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", node);
     ProducerConfig producerConfig = new ProducerConfig(properties);
@@ -45,8 +41,8 @@ public class StepDefinitions {
     producer.send(keyedMessage);
   }
 
-  @Then("a consumer receives a message from \"(.+)\"")
-  public void consumeMessage(final String topic) throws Exception {
+  @Then("^a consumer receives a message from \"([^\"]*)\"$")
+  public void a_consumer_receives_a_message_from(final String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", node);
     ConsumerConfig consumerConfig = new ConsumerConfig(properties);

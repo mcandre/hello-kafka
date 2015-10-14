@@ -1,22 +1,10 @@
+plugins {
+  id 'com.github.samueltbrown.cucumber' version '0.9'
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
-
-configurations {
-  cucumberRuntime {
-    extendsFrom testRuntime
-  }
-}
-
-task cucumber() {
-  dependsOn assemble, compileTestJava
-  doLast {
-    javaexec {
-      main = 'cucumber.api.cli.Main'
-      classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-      args = ['--plugin', 'pretty', '--glue', 'features', 'src/test/resources']
-    }
-  }
-}
+apply plugin: 'com.github.samueltbrown.cucumber'
 
 repositories {
   mavenCentral()
@@ -34,5 +22,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.12'
   testCompile 'info.cukes:cucumber-java:1.2.4'
-  testCompile 'info.cukes:cucumber-junit:1.2.4'
+//  testCompile 'info.cukes:cucumber-junit:1.2.4'
 }
