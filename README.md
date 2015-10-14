@@ -9,7 +9,11 @@
 # EXAMPLE
 
 ```
+$ docker-machine ip default
+192.168.99.100
 $ cd kafka-docker/
+$ vi docker-compose.xml docker-compose-single-broker.yml
+(Update KAFKA_ADVERTISED_HOST_NAME to match output of docker-machine ip default)
 $ docker-compose up
 ...
 
