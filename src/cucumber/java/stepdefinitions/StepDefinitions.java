@@ -35,7 +35,6 @@ public class StepDefinitions {
   public void aProducerSendsAMessageTo(String topic) {
     Properties properties = new Properties();
     properties.setProperty("metadata.broker.list", kafkaNodeList);
-    properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
     properties.setProperty("producer.type", "sync");
     properties.setProperty("request.required.acks", "1");
 
