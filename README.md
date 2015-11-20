@@ -2,7 +2,7 @@
 
 # REQUIREMENTS
 
-* [docker-kafka](https://github.com/wurstmeister/kafka-docker)
+* [Kafka](http://kafka.apache.org/) 0.8+ (e.g. https://github.com/mcandre/docker-kafka)
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8+
 * [Gradle](http://gradle.org/) 2.7+
 
