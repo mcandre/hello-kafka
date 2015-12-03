@@ -6,6 +6,12 @@
 * [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8+
 * [Gradle](http://gradle.org/) 2.7+
 
+## Optional
+
+* [Sonar](http://www.sonarqube.org/)
+
+E.g., `brew install gradle sonar sonar-runner`
+
 # EXAMPLE
 
 ```
