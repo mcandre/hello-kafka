@@ -1,17 +1,5 @@
 # hello-kafka - Hello World Kafka example
 
-# REQUIREMENTS
-
-* [Kafka](http://kafka.apache.org/) 0.8+ (e.g. https://github.com/mcandre/docker-kafka)
-* [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8+
-* [Gradle](http://gradle.org/) 2.7+
-
-## Optional
-
-* [Sonar](http://www.sonarqube.org/)
-
-E.g., `brew install gradle sonar sonar-runner`
-
 # EXAMPLE
 
 ```
@@ -52,4 +40,59 @@ Feature: Kafka integration
 BUILD SUCCESSFUL
 
 Total time: 2.67 secs
+```
+
+# REQUIREMENTS
+
+* [Kafka](http://kafka.apache.org/) 0.8+ (e.g. https://github.com/mcandre/docker-kafka)
+* [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8+
+* [Gradle](http://gradle.org/) 2.7+
+
+## Optional
+
+* [Sonar](http://www.sonarqube.org/)
+* [Infer](http://fbinfer.com/)
+
+E.g., `brew install gradle sonar sonar-runner infer`
+
+# JAVADOCS
+
+```
+$ gradle javadoc
+$ open build/docs/javadoc/index.html
+```
+
+# TEST + CODE COVERAGE
+
+```
+$ gradle test jacoco
+$ open build/reports/jacoco/test/html/index.html
+```
+
+# LINTING
+
+```
+$ gradle check
+
+```
+
+## Optional: FindBugs
+
+```
+$ gradle check
+$ open build/reports/findbugs/main.html
+```
+
+## Optional: Sonar
+
+```
+$ sonar start
+$ gradle check sonar
+$ open http://localhost:9000/
+```
+
+## Optional: Infer
+
+```
+$ infer -- gradle clean build
 ```
