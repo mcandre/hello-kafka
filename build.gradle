@@ -8,6 +8,7 @@ apply plugin: 'maven'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
+apply plugin: 'jacoco'
 apply plugin: 'com.github.samueltbrown.cucumber'
 
 sourceCompatibility = '1.8'
