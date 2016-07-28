@@ -96,3 +96,7 @@ $ open http://localhost:9000/
 ```
 $ infer -- gradle clean build
 ```
+
+# Advanced Topics
+
+For Kafka Connect examples, see https://github.com/mcandre/hello-kafka-connect
