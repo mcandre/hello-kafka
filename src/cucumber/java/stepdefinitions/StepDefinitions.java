@@ -22,55 +22,55 @@ import kafka.consumer.ConsumerIterator;
 import kafka.message.MessageAndMetadata;
 
 public class StepDefinitions {
-  private String kafkaNodeList;
-  private String zookeeperNodeList;
+    private String kafkaNodeList;
+    private String zookeeperNodeList;
 
-  @Given("^kafka cluster has kafka nodes \"([^\"]*)\" and zookeeper nodes \"([^\"]*)\"$")
-  public void kafkaClusterHasNodesAndZookeeperNodes(String kafkaNodeList, String zookeeperNodeList) {
-    this.kafkaNodeList = kafkaNodeList;
-    this.zookeeperNodeList = zookeeperNodeList;
-  }
+    @Given("^kafka cluster has kafka nodes \"([^\"]*)\" and zookeeper nodes \"([^\"]*)\"$")
+    public void kafkaClusterHasNodesAndZookeeperNodes(String kafkaNodeList, String zookeeperNodeList) {
+        this.kafkaNodeList = kafkaNodeList;
+        this.zookeeperNodeList = zookeeperNodeList;
+    }
 
-  @When("^a producer sends a message to \"([^\"]*)\"$")
-  public void aProducerSendsAMessageTo(String topic) {
-    Properties properties = new Properties();
-    properties.setProperty("metadata.broker.list", kafkaNodeList);
-    properties.setProperty("producer.type", "sync");
-    properties.setProperty("request.required.acks", "1");
+    @When("^a producer sends a message to \"([^\"]*)\"$")
+    public void aProducerSendsAMessageTo(String topic) {
+        Properties properties = new Properties();
+        properties.setProperty("metadata.broker.list", kafkaNodeList);
+        properties.setProperty("producer.type", "sync");
+        properties.setProperty("request.required.acks", "1");
 
-    ProducerConfig producerConfig = new ProducerConfig(properties);
-    Producer<byte[], byte[]> producer = new Producer<>(producerConfig);
+        ProducerConfig producerConfig = new ProducerConfig(properties);
+        Producer<byte[], byte[]> producer = new Producer<>(producerConfig);
 
-    String message = "FizzBuzz";
-    byte[] messageBytes = message.getBytes();
+        String message = "FizzBuzz";
+        byte[] messageBytes = message.getBytes();
 
-    KeyedMessage<byte[], byte[]> keyedMessage = new KeyedMessage<>(topic, messageBytes);
+        KeyedMessage<byte[], byte[]> keyedMessage = new KeyedMessage<>(topic, messageBytes);
 
-    producer.send(keyedMessage);
-  }
+        producer.send(keyedMessage);
+    }
 
-  @Then("^a consumer receives a message from \"([^\"]*)\" in group \"([^\"]*)\"$")
-  public void aConsumerReceivesAMessageFromInGroup(String topic, String group) {
-    Properties properties = new Properties();
-    properties.setProperty("zookeeper.connect", zookeeperNodeList);
-    properties.setProperty("group.id", group);
-    properties.setProperty("auto.offset.reset", "smallest");
-    properties.setProperty("consumer.timeout.ms", "3000"); // ms
+    @Then("^a consumer receives a message from \"([^\"]*)\" in group \"([^\"]*)\"$")
+    public void aConsumerReceivesAMessageFromInGroup(String topic, String group) {
+        Properties properties = new Properties();
+        properties.setProperty("zookeeper.connect", zookeeperNodeList);
+        properties.setProperty("group.id", group);
+        properties.setProperty("auto.offset.reset", "smallest");
+        properties.setProperty("consumer.timeout.ms", "3000"); // ms
 
-    ConsumerConfig consumerConfig = new ConsumerConfig(properties);
-    Map<String, Integer> topicCountMap = new HashMap<>();
-    topicCountMap.put(topic, 1);
-    ConsumerConnector consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);
-    Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreamsMap = consumerConnector.createMessageStreams(topicCountMap);
-    List<KafkaStream<byte[], byte[]>> consumerStreams = consumerStreamsMap.get(topic);
-    KafkaStream<byte[], byte[]> consumerStream = consumerStreams.get(0);
-    ConsumerIterator<byte[], byte[]> messageIterator = consumerStream.iterator();
+        ConsumerConfig consumerConfig = new ConsumerConfig(properties);
+        Map<String, Integer> topicCountMap = new HashMap<>();
+        topicCountMap.put(topic, 1);
+        ConsumerConnector consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);
+        Map<String, List<KafkaStream<byte[], byte[]>>> consumerStreamsMap = consumerConnector.createMessageStreams(topicCountMap);
+        List<KafkaStream<byte[], byte[]>> consumerStreams = consumerStreamsMap.get(topic);
+        KafkaStream<byte[], byte[]> consumerStream = consumerStreams.get(0);
+        ConsumerIterator<byte[], byte[]> messageIterator = consumerStream.iterator();
 
-    Assert.assertTrue(messageIterator.hasNext());
+        Assert.assertTrue(messageIterator.hasNext());
 
-    MessageAndMetadata<byte[], byte[]> messageAndMetadata = messageIterator.next();
-    byte[] messageBytes = messageAndMetadata.message();
+        MessageAndMetadata<byte[], byte[]> messageAndMetadata = messageIterator.next();
+        byte[] messageBytes = messageAndMetadata.message();
 
-    Assert.assertEquals("FizzBuzz", new String(messageBytes));
-  }
+        Assert.assertEquals("FizzBuzz", new String(messageBytes));
+    }
 }
