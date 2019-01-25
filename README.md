@@ -2,7 +2,7 @@
 
 # EXAMPLE
 
-```
+```console
 $ docker-machine ip default
 192.168.99.100
 $ cd kafka-docker/
@@ -52,40 +52,43 @@ Total time: 2.67 secs
 
 * [Sonar](http://www.sonarqube.org/)
 * [Infer](http://fbinfer.com/)
-* [editorconfig-cli](https://github.com/amyboyd/editorconfig-cli) (e.g. `go get github.com/amyboyd/editorconfig-cli`)
-* [flcl](https://github.com/mcandre/flcl) (e.g. `go get github.com/mcandre/flcl/...`)
+* [make](https://www.gnu.org/software/make/)
+* [GNU findutils](https://www.gnu.org/software/findutils/)
+* [stank](https://github.com/mcandre/stank) (e.g. `go get github.com/mcandre/stank/...`)
+* [Python](https://www.python.org) 3+ (for yamllint)
+* [Node.js](https://nodejs.org/en/) (for eclint)
 
 # JAVADOCS
 
-```
+```console
 $ gradle javadoc
 $ open build/docs/javadoc/index.html
 ```
 
 # TEST + CODE COVERAGE
 
-```
+```console
 $ gradle test jacoco
 $ open build/reports/jacoco/test/html/index.html
 ```
 
 # LINTING
 
-```
+```console
 $ gradle check
 
 ```
 
 ## Optional: FindBugs
 
-```
+```console
 $ gradle check
 $ open build/reports/findbugs/main.html
 ```
 
 ## Optional: Sonar
 
-```
+```console
 $ sonar start
 $ gradle check sonar
 $ open http://localhost:9000/
@@ -93,7 +96,7 @@ $ open http://localhost:9000/
 
 ## Optional: Infer
 
-```
+```console
 $ infer -- gradle clean build
 ```
 
